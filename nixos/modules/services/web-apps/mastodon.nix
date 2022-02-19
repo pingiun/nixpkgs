@@ -92,6 +92,7 @@ let
 
   mastodonEnv = pkgs.writeShellScriptBin "mastodon-env" ''
     set -a
+    RAILS_ROOT="${cfg.package}"
     source "${envFile}"
     source /var/lib/mastodon/.secrets_env
     eval -- "\$@"
