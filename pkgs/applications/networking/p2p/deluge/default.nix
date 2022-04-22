@@ -9,7 +9,24 @@
 , gobject-introspection
 , librsvg
 , wrapGAppsHook
+, fetchFromGitHub
 }:
+
+let
+libtorrent-rasterbar-master = libtorrent-rasterbar.overrideAttrs (old: {
+  version = "master";
+  src = fetchFromGitHub {
+    owner = "arvidn";
+    repo = "libtorrent";
+    rev = "61ab0eb94fcf2f5cb0253312ae9515dd84ba26a1";
+    sha256 = "sha256-T32QLQ2TL83r7h4e4VqOUVs/ItWyUcTlik5VD9uX35Y=";
+    fetchSubmodules = true;
+  };
+  cmakeFlags = old.cmakeFlags ++ [
+    "-Dwebtorrent=on"
+  ];
+});
+in
 
 pythonPackages.buildPythonPackage rec {
   pname = "deluge";
@@ -27,8 +44,8 @@ pythonPackages.buildPythonPackage rec {
     pyxdg
     pyopenssl
     service-identity
-    libtorrent-rasterbar.dev
-    libtorrent-rasterbar.python
+    libtorrent-rasterbar-master.dev
+    libtorrent-rasterbar-master.python
     setuptools
     setproctitle
     pillow
