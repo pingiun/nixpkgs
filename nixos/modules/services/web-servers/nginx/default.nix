@@ -1189,12 +1189,11 @@ in
         # listen (vhost) > defaultListen (server) > listenAddresses (vhost) > defaultListenAddresses (server)
         assertion =
         let
-          hasAtLeastHttpListener = listenOptions: any (listenLine: if listenLine ? proxyProtocol then !listenLine.proxyProtocol else true) listenOptions;
-          hasAtLeastDefaultHttpListener = if cfg.defaultListen != [] then hasAtLeastHttpListener cfg.defaultListen else (cfg.defaultListenAddresses != []);
+          hasAtLeastDefaultHttpListener = if cfg.defaultListen != [] then true else (cfg.defaultListenAddresses != []);
         in
           all (host:
             let
-              hasAtLeastVhostHttpListener = if host.listen != [] then hasAtLeastHttpListener host.listen else (host.listenAddresses != []);
+              hasAtLeastVhostHttpListener = if host.listen != [] then true else (host.listenAddresses != []);
               vhostAuthority = host.listen != [] || (cfg.defaultListen == [] && host.listenAddresses != []);
             in
               # Either vhost has precedence and we need a vhost specific http listener
